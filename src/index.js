@@ -30,16 +30,27 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 // votes submission
-    voteForm.addEventListener("submit", (event) => {
-        event.preventDefault();
-        if (!selectedCharacter) return;
+voteForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    if (!selectedCharacter) return;
 
-        const votesInput = document.getElementById("votes");
-        const newVotes = parseInt(votesInput.value) || 0;
-        selectedCharacter.votes += newVotes;
-        document.getElementById("vote-count").textContent = selectedCharacter.votes;
+    const votesInput = document.getElementById("votes");
+    const newVotes = parseInt(votesInput.value) || 0;
+    const updatedVotes = selectedCharacter.votes + newVotes;
+
+    fetch(`${baseURL}/${selectedCharacter.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ votes: updatedVotes })
+    })
+    .then(response => response.json())
+    .then(updatedCharacter => {
+        selectedCharacter.votes = updatedCharacter.votes;
+        document.getElementById("vote-count").textContent = updatedCharacter.votes;
         votesInput.value = "";
-    });
+    })
+    .catch(error => console.error("Error updating votes:", error));
+});
 
 // Reset votes
     resetBtn.addEventListener("click", () => {
