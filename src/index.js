@@ -35,18 +35,19 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!selectedCharacter) return;
 
         let currentVotes = selectedCharacter.votes;
+       
         const inputValue = document.querySelector("#votes").value;
-
+        
         fetch(`${baseURL}/${selectedCharacter.id}`, { 
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({ votes: parseInt(inputValue, 10) + currentVotes }),
-        })
-       
-        .catch(error => console.error("Error updating votes:", error));
-    }
+        }).then(() => {
+            window.location.reload()
+        })  
+    }    
 
     // Attach event listener to the form
     voteForm.addEventListener("submit", addVote);
