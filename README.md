@@ -169,5 +169,5 @@ deliverables!**
 
 
 ####  Deployed link 
- 
+ https://alex-njugi.github.io/week-2-code-challenge-flatter-cutie-alex-njugi/
 
