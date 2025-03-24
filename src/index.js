@@ -1,6 +1,6 @@
 // Your code here
 document.addEventListener("DOMContentLoaded", () => {
-    const baseURL = "http://localhost:3000/characters";
+    const baseURL = "http://flatacuties-zeta.vercel.app/characters";
     const characterBar = document.getElementById("character-bar");
     const detailedInfo = document.getElementById("detailed-info");
     const voteForm = document.getElementById("votes-form");
@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("vote-count").textContent = character.votes;
     }
 
-// Handle votes submission
+// votes submission
     voteForm.addEventListener("submit", (event) => {
         event.preventDefault();
         if (!selectedCharacter) return;
