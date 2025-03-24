@@ -2,25 +2,24 @@
 document.addEventListener("DOMContentLoaded", () => {
     const baseURL = "https://flatacuties-zeta.vercel.app/characters";
     const characterBar = document.getElementById("character-bar");
+    const detailedInfo = document.getElementById("detailed-info");
     const voteForm = document.getElementById("votes-form");
     const resetBtn = document.getElementById("reset-btn");
     let selectedCharacter = null;
 
-    // Fetch characters
+    // Fetch characters 
     fetch(baseURL)
         .then(response => response.json())
         .then(characters => {
             characters.forEach(character => {
                 const span = document.createElement("span");
                 span.textContent = character.name;
-                span.style.cursor = "pointer";
                 span.addEventListener("click", () => displayCharacter(character));
                 characterBar.appendChild(span);
             });
         })
-        .catch(error => console.error("Error fetching characters:", error)); 
+        .catch(error => console.error("Error fetching characters:", error));
 
-    // Display selected character
     function displayCharacter(character) {
         selectedCharacter = character;
         document.getElementById("name").textContent = character.name;
@@ -30,48 +29,32 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Votes submission
-    voteForm.addEventListener("submit", (event) => {
-        event.preventDefault();
-        if (!selectedCharacter) return alert("Please select a character!");
+    function addVote(e) {
+        e.preventDefault();
 
-        const votesInput = document.getElementById("votes");
-        const newVotes = parseInt(votesInput.value);
-        if (isNaN(newVotes) || newVotes < 1) return alert("Enter a valid number!");
+        if (!selectedCharacter) return;
 
-        const updatedVotes = selectedCharacter.votes + newVotes;
+        let currentVotes = selectedCharacter.votes;
+        const inputValue = document.querySelector("#votes").value;
 
-        // Send PATCH request to update votes
-        fetch(`${baseURL}/${selectedCharacter.id}`, {
+        fetch(`${baseURL}/${selectedCharacter.id}`, { 
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ votes: updatedVotes }),
+            body: JSON.stringify({ votes: parseInt(inputValue, 10) + currentVotes }),
         })
-        .then(response => response.json())
-        .then(updatedCharacter => {
-            selectedCharacter.votes = updatedCharacter.votes;
-            document.getElementById("vote-count").textContent = updatedCharacter.votes;
-            votesInput.value = ""; // Reset input field
-        })
+       
         .catch(error => console.error("Error updating votes:", error));
-    });
+    }
+
+    // Attach event listener to the form
+    voteForm.addEventListener("submit", addVote);
 
     // Reset votes
     resetBtn.addEventListener("click", () => {
-        if (!selectedCharacter) return alert("Please select a character!");
-
-        // Send PATCH request to reset votes
-        fetch(`${baseURL}/${selectedCharacter.id}`, {
-            method: "PATCH",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ votes: 0 }),
-        })
-        .then(response => response.json())
-        .then(updatedCharacter => {
-            selectedCharacter.votes = updatedCharacter.votes;
-            document.getElementById("vote-count").textContent = updatedCharacter.votes;
-        })
-        .catch(error => console.error("Error resetting votes:", error));
+        if (!selectedCharacter) return;
+        selectedCharacter.votes = 0;
+        document.getElementById("vote-count").textContent = 0;
     });
 });
