@@ -1,6 +1,6 @@
 // Your code here
 document.addEventListener("DOMContentLoaded", () => {
-    const baseURL = "http://flatacuties-zeta.vercel.app/characters";
+    const baseURL = "https://flatacuties-zeta.vercel.app/characters";
     const characterBar = document.getElementById("character-bar");
     const detailedInfo = document.getElementById("detailed-info");
     const voteForm = document.getElementById("votes-form");
